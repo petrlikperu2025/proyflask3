@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 import numpy as np
 import tensorflow as tf
+from flask_cors import CORS
+
+
 
 # =========================
 # CONFIG
@@ -8,6 +11,11 @@ import tensorflow as tf
 MODEL_PATH = "model_c2f.tflite"
 
 app = Flask(__name__)
+
+# =========================
+# ENABLE CORS
+# =========================
+CORS(app)  # <-- ESTA LÍNEA ES CLAVE
 
 # =========================
 # LOAD TFLITE MODEL
@@ -25,7 +33,7 @@ output_details = interpreter.get_output_details()
 def home():
     return "Flask + TFLite API running"
 
-@app.route("/predict/<float:celsius>", methods=["GET"])
+@app.route("/predict/<float:celsius>", methods=["POST"])
 def predict_get(celsius):
 
     input_data = np.array([[celsius]], dtype=np.float32)
